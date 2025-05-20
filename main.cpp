@@ -3,38 +3,45 @@
 #include<bits/stdc++.h>
 #include <stdlib.h>
 #define rad (3.1416/180)
-#define EN_SIZE 20
+#define EN_SIZE 10
 
-#include "RGBpixmap.cpp"
+#include "objL/model.h"
 
 using namespace std;
 
-RGBpixmap pix[6];
-
 float zoom=4;
-int tola[5000][5000];
 float tX=0,tY=0,tZ=-8,rX=0,rY=0,rZ=4;
 float tZ1=-20,tZ2=-40,tZ3=-60,tZ4=-80,tZ5=-100,tZ6=-120;
 float rotX=0,rotY=0,rotZ=0;
 float cosX=0,cosY=1,cosZ=0;
 float angle=0;
-float xEye=0.0f,yEye=5.0f,zEye=30.0f;
 float cenX=0,cenY=0,cenZ=0,roll=0;
 float radius=0;
 float theta=0,slope=0;
 float speed = 0.3;
 float angleBackFrac = 0.2;
-bool saheedMinarVisible = false;
 float r[] = {0.1,0.4,0.0,0.9,0.2,0.5,0.0,0.7,0.5,0.0};
 float g[] = {0.2,0.0,0.4,0.5,0.2,0.0,0.3,0.9,0.0,0.2};
 float b[] = {0.4,0.5,0.0,0.7,0.9,0.0,0.1,0.2,0.5,0.0};
 int TIME=0;
 bool START = false;
-float torusPosX[7] = {1,-2,3,-4,-2,0,2};
-float torusPosY[7] = {2,3,10,6,7,4,1};
+float diamondPosX[7] = {1,-2,3,-4,-2,0,2};
+float diamondPosY[7] = {2,3,10,6,7,4,1};
+bool diamondCollected[7] = {false, false, false, false, false, false, false};
 
 bool rot = false;
 
+Model plane_model;
+Model ground_model;
+Model house_model;
+Model house2_model;
+Model tree1_model;
+Model tree2_model;
+Model tree3_model;
+Model tree4_model;
+Model rock1_model;
+Model rock2_model;
+Model diamond_model;
 
 static void resize(int width, int height)
 {
@@ -49,861 +56,123 @@ static void resize(int width, int height)
     glLoadIdentity();
 }
 
-void drawShohidMinar(){
-
-    glColor3d(0.4,0.2,0.2);
-	glPushMatrix();
-        glTranslated(0,1.55,0);
-        glScaled(2,0.05,1.5);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0.4,0.2,0.2);
-	glPushMatrix();
-        glTranslated(0,1.6,0);
-        glScaled(1.9,0.05,1.4);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    //glColor3d(0.4,0.2,0.2);
-    //glColor3d(1,0.8,0.7);
-    glColor3d(0.4,0.2,0.2);
-	glPushMatrix();
-        glTranslated(0,1.65,0);
-        glScaled(1.8,0.05,1.3);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    /// pataton
-
-    glColor3d(1,1,1);
-	glPushMatrix();
-        glTranslated(0,1.68,-0.4);
-        glScaled(0.5,0.02,0.08);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    /// Piller
-
-	glPushMatrix();
-        glTranslated(0,1.99,-0.4);
-        glScaled(0.06,0.7,0.04);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    /// ROD
-
-    glColor3d(0,0,0);
-
-    glPushMatrix();
-        glTranslated(0.07,1.99,-0.4);
-        glScaled(0.003,0.7,0.003);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(0.11,1.99,-0.4);
-        glScaled(0.003,0.7,0.003);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(0.15,1.99,-0.4);
-        glScaled(0.003,0.7,0.003);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    ///
-    glPushMatrix();
-    glTranslated(-0.22,0,0);
-        glPushMatrix();
-            glTranslated(0.07,1.99,-0.4);
-            glScaled(0.003,0.7,0.003);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(0.11,1.99,-0.4);
-            glScaled(0.003,0.7,0.003);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(0.15,1.99,-0.4);
-            glScaled(0.003,0.7,0.003);
-            glutSolidCube(1);
-        glPopMatrix();
-    glPopMatrix();
-
-    ///Horizontal rod
-        glPushMatrix();
-            glTranslated(2.2,0,-0.1);
-            glScaled(4.2,1,1);
-                glColor3d(0,0,0);
-                glPushMatrix();
-                    glTranslated(-0.528,1.85,-0.3);
-                    glScaled(0.1,0.003,0.003);
-                    glutSolidCube(1);
-                glPopMatrix();
-
-                glPushMatrix();
-                    glTranslated(-0.528,2.02,-0.3);
-                    glScaled(0.1,0.003,0.003);
-                    glutSolidCube(1);
-                glPopMatrix();
-
-                glPushMatrix();
-                    glTranslated(-0.528,2.18,-0.3);
-                    glScaled(0.1,0.003,0.003);
-                    glutSolidCube(1);
-                glPopMatrix();
-                glColor3d(1,1,1);
-            glPopMatrix();
-
-    /// ROD END
-
-    glColor3d(1,1,1);
-    glPushMatrix();
-        glTranslated(-0.22,1.99,-0.4);
-        glScaled(0.06,0.7,0.04);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(0.22,1.99,-0.4);
-        glScaled(0.06,0.7,0.04);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    /// Uporer piller
-
-    glPushMatrix();
-        glTranslated(0,0.743,-1.424);
-        glRotated(45,1,0,0);
-
-        //glColor3d(1,0,1);
-        glPushMatrix();
-            glTranslated(0,1.99,-0.4);
-            glScaled(0.06,0.3,0.04);
-            glutSolidCube(1);
-        glPopMatrix();
-        //glColor3d(1,1,1);
-
-        glPushMatrix();
-            glTranslated(-0.22,1.99,-0.4);
-            glScaled(0.06,0.3,0.04);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(0.22,1.99,-0.4);
-            glScaled(0.06,0.3,0.04);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(0,2.15,-0.4);
-            glScaled(0.5,0.04,0.04);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        /// ROD
-
-        glColor3d(0,0,0);
-
-        glPushMatrix();
-            glTranslated(0.07,1.99,-0.4);
-            glScaled(0.003,0.277,0.003);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(0.11,1.99,-0.4);
-            glScaled(0.003,0.277,0.003);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(0.15,1.99,-0.4);
-            glScaled(0.003,0.277,0.003);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        ///
-
-        glColor3d(0,0,0);
-        glPushMatrix();
-        glTranslated(-0.22,0,0);
-            glPushMatrix();
-                glTranslated(0.07,1.99,-0.4);
-                glScaled(0.003,0.277,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.11,1.99,-0.4);
-                glScaled(0.003,0.277,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.15,1.99,-0.4);
-                glScaled(0.003,0.277,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-        glPopMatrix();
-        /// ROD END
-
-        ///Horizontal rod
-        glPushMatrix();
-            glTranslated(2.2,0,-0.1);
-            glScaled(4.2,1,1);
-                glColor3d(0,0,0);
-                glPushMatrix();
-                    glTranslated(-0.528,1.85,-0.3);
-                    glScaled(0.1,0.003,0.003);
-                    glutSolidCube(1);
-                glPopMatrix();
-
-                glPushMatrix();
-                    glTranslated(-0.528,2,-0.3);
-                    glScaled(0.1,0.003,0.003);
-                    glutSolidCube(1);
-                glPopMatrix();
-
-                glPushMatrix();
-                    glTranslated(-0.528,2.15,-0.3);
-                    glScaled(0.1,0.003,0.003);
-                    glutSolidCube(1);
-                glPopMatrix();
-                glColor3d(1,1,1);
-        glPopMatrix();
-
-    glPopMatrix();
-
-
-    /// pasher piller left 1
-    glColor3d(1,1,1);
-    glPushMatrix();
-        glTranslated(0.1,0,-0.4);
-        glRotated(45,0,1,0);
-
-        glPushMatrix();
-            glTranslated(-0.605,1.94,-0.3);
-            glScaled(0.045,0.65,0.03);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(-0.45,1.94,-0.3);
-            glScaled(0.045,0.65,0.03);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(-0.528,2.258,-0.3);
-            glScaled(0.199,0.04,0.03);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(-0.528,1.68,-0.3);
-            glScaled(0.199,0.02,0.06);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        /// ROD
-        glColor3d(0,0,0);
-        glPushMatrix();
-            glTranslated(-0.64,-0.05,0.1);
-            glScaled(1,1.02,1);
-            glPushMatrix();
-                glTranslated(0.078,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.11,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.145,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-        glPopMatrix();
-
-        ///
-        glColor3d(1,1,1);
-
-        ///Horizontal rod
-            glColor3d(0,0,0);
-            glPushMatrix();
-                glTranslated(-0.528,1.85,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,2,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,2.15,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-            glColor3d(1,1,1);
-    glPopMatrix();
-
-    /// pasher piller left 2
-    glPushMatrix();
-        glTranslated(0.65,0,0.3);
-        glRotated(-45,0,1,0);
-
-        glPushMatrix();
-            glTranslated(-0.605,1.94,-0.3);
-            glScaled(0.045,0.65,0.03);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(-0.45,1.94,-0.3);
-            glScaled(0.045,0.65,0.03);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(-0.528,2.258,-0.3);
-            glScaled(0.199,0.04,0.03);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        glPushMatrix();
-            glTranslated(-0.528,1.68,-0.3);
-            glScaled(0.199,0.02,0.06);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        ///ROD
-        glColor3d(0,0,0);
-        glPushMatrix();
-        glTranslated(-0.64,-0.05,0.1);
-            glScaled(1,1.02,1);
-            glPushMatrix();
-                glTranslated(0.078,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.11,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.145,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-        glPopMatrix();
-        glColor3d(1,1,1);
-        ///ROD
-
-        ///Horizontal rod
-            glColor3d(0,0,0);
-            glPushMatrix();
-                glTranslated(-0.528,1.85,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,2,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,2.15,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-            glColor3d(1,1,1);
-
-    glPopMatrix();
-
-
-    ///Choto pillers
-
-    glPushMatrix();
-        /// pasher piller left 1
-        glTranslated(0.06,0,0.14);
-        glPushMatrix();
-
-            glTranslated(-0.2,0,-0.31);
-            glRotated(45,0,1,0);
-
-            glPushMatrix();
-                glTranslated(-0.605,1.88,-0.3);
-                glScaled(0.045,0.4,0.03);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.45,1.88,-0.3);
-                glScaled(0.045,0.4,0.03);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,2.08,-0.3);
-                glScaled(0.2,0.04,0.03);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,1.68,-0.3);
-                glScaled(0.199,0.02,0.06);
-                glutSolidCube(1);
-            glPopMatrix();
-
-        ///ROD
-        glColor3d(0,0,0);
-        glPushMatrix();
-        glTranslated(-0.641,0.43,0.1);
-        glScaled(1,0.73,1);
-            glPushMatrix();
-                glTranslated(0.078,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.11,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.145,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-        glPopMatrix();
-
-        ///Horizontal rod
-            glColor3d(0,0,0);
-            glPushMatrix();
-                glTranslated(-0.528,1.8,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,1.96,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-            glColor3d(1,1,1);
-        ///ROD
-
-        glPopMatrix();
-
-        /// pasher piller left 2
-        glPushMatrix();
-            glTranslated(0.83,0,0.39);
-            glRotated(-45,0,1,0);
-
-            glPushMatrix();
-                glTranslated(-0.605,1.88,-0.3);
-                glScaled(0.045,0.4,0.03);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.45,1.88,-0.3);
-                glScaled(0.045,0.4,0.03);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,2.1,-0.3);
-                glScaled(0.199,0.04,0.03);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,1.68,-0.3);
-                glScaled(0.199,0.02,0.06);
-                glutSolidCube(1);
-            glPopMatrix();
-
-
-            ///Horizontal rod
-            glColor3d(0,0,0);
-            glPushMatrix();
-                glTranslated(-0.528,1.8,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(-0.528,1.96,-0.3);
-                glScaled(0.1,0.003,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-            glColor3d(1,1,1);
-
-            ///ROD
-        glColor3d(0,0,0);
-        glPushMatrix();
-        glTranslated(-0.641,0.43,0.1);
-        glScaled(1,0.73,1);
-            glPushMatrix();
-                glTranslated(0.078,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.11,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-
-            glPushMatrix();
-                glTranslated(0.145,1.99,-0.4);
-                glScaled(0.003,0.56,0.003);
-                glutSolidCube(1);
-            glPopMatrix();
-        glPopMatrix();
-        glColor3d(1,1,1);
-        ///ROD
-
-        glPopMatrix();
-
-
-    glPopMatrix();
-
-    /// Circle
-
-    glColor3d(1,0,0);
-    glPushMatrix();
-        glTranslated(0,2.1,-0.44);
-        glScaled(0.35,0.35,0.01);
-        glutSolidSphere(1,50,50);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(-0.18,1.9,-0.45);
-        glScaled(0.01,0.5,0.01);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(0.18,1.9,-0.45);
-        glScaled(0.01,0.5,0.01);
-        glutSolidCube(1);
-    glPopMatrix();
-
-
+void ground(){
+    ground_model.draw();
 }
 
-void fan(){
-    glColor3d(0.5,1,0);
-    glPushMatrix();
-        glTranslated(0,0,0);
-        glScaled(1,1,0.7);
-        glutSolidSphere(0.8,30,30);
-    glPopMatrix();
+void house(){
+    house_model.draw();
+}
 
-    glColor3d(0.5,1,0);
-    glPushMatrix();
-        glTranslated(0,0,0);
-        glRotated(5,0,1,0);
-        glScaled(0.5,2.5,0.05);
-        glutSolidSphere(1,30,30);
-    glPopMatrix();
+void house2(){
+    house2_model.draw();
+}
 
-    glColor3d(0.5,1,0);
-    glPushMatrix();
-        glTranslated(0,0,0);
-        glRotated(-5,0,1,0);
-        glRotated(90,0,0,1);
-        glScaled(0.5,2.5,0.05);
-        glutSolidSphere(1,30,30);
-    glPopMatrix();
+void tree1(){
+    tree1_model.draw();
 
+}
+void tree2(){
+    tree2_model.draw();
+
+}
+void tree3(){
+    tree3_model.draw();
+}
+void tree4(){
+    tree4_model.draw();
 }
 
 void plane(){
-    const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    double a = t*90.0;
-
-    /// Main body
-    glColor3d(0.5,1,0);
-    glPushMatrix();
-        glTranslated(0,0,0);
-        glScaled(3,0.4,0.5);
-        glutSolidSphere(1,30,30);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(1.7,0.1,0);
-        glScaled(1.5,0.7,0.8);
-        glRotated(40,0,1,0);
-        glutSolidSphere(0.45,30,30);
-    glPopMatrix();
-
-    ///Samner Pakha
-
-    ///Right
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(0,0,1.2);
-        glRotated(-50,0,1,0);
-        glScaled(0.7,0.1,3);
-        glRotated(25,0,1,0);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(-0.3,-0.15,1.5);
-        glRotated(90,0,1,0);
-        glScaled(0.1,0.1,0.9);
-        glutSolidTorus(0.5,0.5,50,50);
-    glPopMatrix();
-
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(0.2,-0.15,0.9);
-        glRotated(90,0,1,0);
-
-        /// FAN
-//        glPushMatrix();
-//            glTranslated(0,0,0.5);
-//            glRotated(10*a,0,0,1);
-//            glScaled(0.1,0.1,0.1);
-//            fan();
-//        glPopMatrix();
-
-        glScaled(0.1,0.1,0.9);
-        glutSolidTorus(0.5,0.5,50,50);
-    glPopMatrix();
-
-    ///Left
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(0,0,-1.2);
-        glRotated(50,0,1,0);
-        glScaled(0.7,0.1,3);
-        glRotated(-25,0,1,0);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(-0.3,-0.15,-1.5);
-        glRotated(90,0,1,0);
-        glScaled(0.1,0.1,0.9);
-        glutSolidTorus(0.5,0.5,50,50);
-    glPopMatrix();
-
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(0.2,-0.15,-0.9);
-        glRotated(90,0,1,0);
-        glScaled(0.1,0.1,0.9);
-        glutSolidTorus(0.5,0.5,50,50);
-    glPopMatrix();
-
-
-    ///Pechoner pakha
-    glPushMatrix();
-        glTranslated(-2.8,0,0);
-        glScaled(0.8,0.5,0.3);
-
-        ///Right
-        glColor3d(0.8,1,0);
-        glPushMatrix();
-            glTranslated(0.4,0,1.5);
-            glRotated(-30,0,1,0);
-            glScaled(0.7,0.1,3);
-            glRotated(10,0,1,0);
-            glutSolidCube(1);
-        glPopMatrix();
-
-        ///left
-        glColor3d(0.8,1,0);
-        glPushMatrix();
-            glTranslated(0.4,0,-1.5);
-            glRotated(30,0,1,0);
-            glScaled(0.7,0.1,3);
-            glRotated(-10,0,1,0);
-            glutSolidCube(1);
-        glPopMatrix();
-    glPopMatrix();
-
-    /// Pesoner Uporer pakha
-    glColor3d(0.8,1,0);
-    glPushMatrix();
-        glTranslated(-2.7,0.5,0);
-        glRotated(45,0,0,1);
-        glScaled(0.8,2,0.1);
-        glRotated(-20,0,0,1);
-        glutSolidCube(0.5);
-    glPopMatrix();
-
-//    glColor3d(0.8,1,0);
-//    glPushMatrix();
-//        glTranslated(-2.95,0.85,0);
-//        glRotated(90,0,1,0);
-//        glScaled(0.05,0.05,0.6);
-//        glutSolidTorus(0.5,0.5,50,50);
-//    glPopMatrix();
-
-
-    ///FANS
-
-//    glPushMatrix();
-//        glTranslated(0,0,0);
-//        glRotated(10*a,0,0,1);
-//        //glRotated(90,1,0,0);
-//        fan();
-//    glPopMatrix();
+    plane_model.draw();
 }
 
-
-void singleTolaHouse(int R,int G,int B){
-    glColor3d(r[R%11],g[G%11],b[B%11]);
-    glPushMatrix();
-        glTranslated(0,0,0);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(0.2,0,0);
-        glScaled(0.3,0.3,1.001);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(-0.2,0,0);
-        glScaled(0.3,0.3,1.001);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(0,0,0.2);
-        glScaled(1.001,0.3,0.3);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glColor3d(0,0,0);
-    glPushMatrix();
-        glTranslated(0,0,-0.2);
-        glScaled(1.001,0.3,0.3);
-        glutSolidCube(1);
-    glPopMatrix();
-
+void rock1(){
+    rock1_model.draw();
 }
 
-void house(int n,int R,int G){
-    for(int i=0;i<n;i++){
-        glPushMatrix();
-            glTranslated(0,0.8+i,0);
-            singleTolaHouse(G,R,i);
-        glPopMatrix();
-    }
+void rock2(){
+    rock2_model.draw();
 }
 
-void soheedMinarEnv(){
-    /// Ground
-    glColor3d(0,0.5,0.1);
-    glPushMatrix();
-        glTranslated(0,0,0);
-        glScaled(EN_SIZE*2,0.3,EN_SIZE*2);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(-8,-2.7,-5);
-        glRotated(65,0,1,0);
-        //glRotated(15,0,1,0);
-        glScaled(2,2,2);
-        drawShohidMinar();
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(8,-2.7,-5);
-        glRotated(-65,0,1,0);
-        //glRotated(15,0,1,0);
-        glScaled(2,2,2);
-        drawShohidMinar();
-    glPopMatrix();
+void diamond(){
+    diamond_model.draw();
 }
 
+int score = 0;
 void environment(int n){
-
-    /// Ground
-    glColor3d(0,0.5,0.1);
+    if (!diamondCollected[n] && 
+        diamond_model.check_collision(0, 1, 0, 
+                                    tX + diamondPosX[n],
+                                    tY + diamondPosY[n], 
+                                    tZ, 
+                                    3.0f)) 
+    {
+        diamondCollected[n] = true;
+        score += 1;
+        cout << "Score: " << score << endl;
+    }
     glPushMatrix();
-        glTranslated(0,0,0);
-        glScaled(EN_SIZE*2,0.3,EN_SIZE*2);
-        glutSolidCube(1);
+        glTranslated(28,0,0);
+        glScaled(EN_SIZE*2,10,EN_SIZE*2);
+        ground();
     glPopMatrix();
 
-
-    glColor3d(0,1,0.1);
     glPushMatrix();
-        glTranslated(torusPosX[n],torusPosY[n],0);
-        glScaled(0.3,0.3,0.3);
-        glutSolidTorus(1,3,30,30);
+        glTranslated(diamondPosX[n],diamondPosY[n],0);
+        glScaled(3,3,3);
+        diamond();
+    glPopMatrix(); 
+
+    glPushMatrix();
+        glTranslated(-2,0,-5);
+        glScaled(2,2,2);
+        tree1();
     glPopMatrix();
 
-        for(int i=-(EN_SIZE/2)+1;i<(EN_SIZE/2);i+=2){
-            for(int j=-(EN_SIZE/2)+1;j<(EN_SIZE/2);j+=2){
-                if(tola[i+(EN_SIZE/2)+1][j+(EN_SIZE/2)+1]!=0){
-                    glPushMatrix();
-                        glTranslated(i,0,j);
-                        house(tola[i+(EN_SIZE/2)+1][j+(EN_SIZE/2)+1],i,j);
-                    glPopMatrix();
-                }else if(i>=-5&&i<=5){}
-                else{
-                    tola[i+(EN_SIZE/2)+1][j+(EN_SIZE/2)+1]=(rand()%5)+1;
-                    glPushMatrix();
-                        glTranslated(i,0,j);
-                        house(tola[i+(EN_SIZE/2)+1][j+(EN_SIZE/2)+1],i,j);
-                    glPopMatrix();
-                }
-            }
-        }
+    glPushMatrix();
+        glTranslated(-35,0,0);
+        glScaled(3,3,3);
+        tree3();
+    glPopMatrix();
 
-   // glColor3d(0,1,0.7);
+    glPushMatrix();
+        glTranslated(-8,0,3);
+        glRotated(90, 0, 1, 0);
+        glScaled(3,3,3);
+        house();
+    glPopMatrix();
 
-//    glPushMatrix();
-//        glRotated(angle,0,1,0);
-//        glPushMatrix();
-//            glTranslated(tX,tY,tZ);
-//            glScaled(1,1,2);
-//            //glRotated(90,1,0,0);
-//            glutSolidCube(1);
-//        glPopMatrix();
-//    glPopMatrix();
+    glPushMatrix();
+        glTranslated(-14,0,6);
+        glScaled(2,2,2);
+        tree4();
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslated(9,0,-5);
+        glRotated(-65,0,1,0);
+        glScaled(3,3,3);
+        tree2();
+    glPopMatrix();
+
+    glPushMatrix();
+       glTranslated(-12,0,-5);
+        glScaled(2,2,2);
+        rock1();
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslated(-15,0,-20);
+        glScaled(2,2,2);
+        rock2();
+    glPopMatrix();  
+
+    glPushMatrix();
+        glTranslated(9,0,-7);
+        glScaled(2,2,2);
+        house2();
+    glPopMatrix();      
 }
 
 void draw(){
@@ -912,7 +181,6 @@ void draw(){
 
     TIME = t;
 
-    ///Plane
     if(rotX>11)rotX=11;
     if(rotX<-11)rotX=-11;
     if(rotZ>10)rotZ=10;
@@ -942,11 +210,6 @@ void draw(){
     glPopMatrix();
 
     glPushMatrix();
-        glTranslated(tX,tY,tZ1);
-        soheedMinarEnv();
-    glPopMatrix();
-
-    glPushMatrix();
         glTranslated(tX,tY,tZ2);
         environment(3);
     glPopMatrix();
@@ -968,7 +231,7 @@ void draw(){
 
     glPushMatrix();
         glTranslated(tX,tY,tZ6);
-        environment(2);
+        environment(6);
     glPopMatrix();
 
     tZ+=speed;
@@ -994,58 +257,33 @@ void draw(){
     if(rotZ>0)rotZ-=angleBackFrac;
     if(rotZ<0)rotZ+=angleBackFrac;
 
-    //cout<<tX<<" "<<tY<<" "<<tZ<<endl;
-    //cout<<rotX<<" "<<rotY<<" "<<rotZ<<endl;
-
     speed += 0.0002;
     if(speed>=0.7)speed=0.7;
 }
 
-
-void drawBitmapText(char *str,float x,float y,float z)
+void drawStrokeText(string str,int x,int y,int z)
 {
-	char *c;
-	glRasterPos3f(x,y+8,z);
-
-	for (c=str; *c != '\0'; c++)
-	{
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, *c);
-	}
-}
-
-void drawStrokeText(char* str,int x,int y,int z)
-{
-	  char *c;
 	  glPushMatrix();
 	  glTranslatef(x, y+8,z);
 	  glScalef(0.002f,0.002f,z);
 
-	  for (c=str; *c != '\0'; c++)
+	  for (int i =0; i < str.size(); i++)
 	  {
-    		glutStrokeCharacter(GLUT_STROKE_ROMAN , *c);
+    		glutStrokeCharacter(GLUT_STROKE_ROMAN , str[i]);
 	  }
 	  glPopMatrix();
 }
 
-void drawStrokeText2(char* str,int x,int y,int z)
+void drawStrokeText2(string str,int x,int y,int z)
 {
-	  char *c;
 	  glPushMatrix();
 	  glTranslatef(x, y+8,z);
 	  glScalef(0.005f,0.005f,z);
 
-	  for (c=str; *c != '\0'; c++)
+	  for (int i =0; i < str.size(); i++)
 	  {
-    		glutStrokeCharacter(GLUT_STROKE_ROMAN , *c);
+    		glutStrokeCharacter(GLUT_STROKE_ROMAN , str[i]);
 	  }
-	  glPopMatrix();
-}
-void drawStrokeChar(char c,float x,float y,float z)
-{
-	  glPushMatrix();
-          glTranslatef(x, y+8,z);
-          glScalef(0.002f,0.002f,z);
-          glutStrokeCharacter(GLUT_STROKE_ROMAN , c);
 	  glPopMatrix();
 }
 
@@ -1076,24 +314,18 @@ static void display(void)
             draw();
         glPopMatrix();
 
-        drawStrokeText("UP: W, DOWN: S, LEFT: A, RIGHT: D, MAIN MENU: M",-8,0.9,0);
+        drawStrokeText("UP: W",-8,0,0);
+        drawStrokeText("DOWN: S",-8,-1,0);
+        drawStrokeText("LEFT: A",-8,-2,0);
+        drawStrokeText("RIGHT: D",-8,-3,0);
+        drawStrokeText("MAIN MENU: M",-8,-4,0);
         drawStrokeText("TIME : ",3,0,0);
-        int mod,number=0;
-        while(TIME){
-            mod=TIME%10;
-            number=number*10+mod;
-            TIME/=10;
-        }
-        float tmp=0;
-        while(number){
-            mod=number%10;
-            drawStrokeChar(mod+48,4+tmp,0,0);
-            number/=10;
-            tmp+=0.2;
-        }
+        drawStrokeText(std::to_string(TIME),5,0,0);
+        drawStrokeText("SCORE : ",-3,0,0);
+        drawStrokeText(std::to_string(score),-1,0,0);
+        TIME = TIME + 1;
     }
     else{
-
         glPushMatrix();
             glTranslated(0,3,0);
             glRotated(aa,0,1,0);
@@ -1101,33 +333,18 @@ static void display(void)
             plane();
         glPopMatrix();
 
-        drawStrokeText("Press G to Start",-1,-1,0);
-        drawStrokeText2("Plane Game",-2,0,0);
+        drawStrokeText("Press G to Start Game",-5,-2,0);
+        drawStrokeText2("Open Flight FX",-5,-1,0);
     }
-
-    //glColor3d(1,1,0);
-	//drawStrokeText("Osama Hosam's OpenGL Tutorials",200,200,0);
-
-//	glRasterPos2i(100, 120);
-//    glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-//    glutBitmapString(GLUT_BITMAP_HELVETICA_18, "text to render");
-
-    //drawBitmapText("Osama Hosam's OpenGL Tutorials",0,0,0);
-
-
-    //drawStrokeChar(49,2,0,0);
-
 
     glutSwapBuffers();
 }
 
 
-static void key(unsigned char key, int x, int y)
-{
+static void key(unsigned char key, int x, int y){
     float frac = 0.3;
     float rotFrac = 1;
-    switch (key)
-    {
+    switch (key){
         case 27 :
         case 'q':
             exit(0);
@@ -1161,46 +378,18 @@ static void key(unsigned char key, int x, int y)
             rotX+=rotFrac*3;
             rotY-=rotFrac/2;
             break;
-//        case 'y':
-//            rotX-=rotFrac;
-//            break;
-//        case 'h':
-//            rotX+=rotFrac;
-//            break;
-//        case 'g':
-//            rotY+=rotFrac;
-//            break;
-//        case 'j':
-//            rotY-=rotFrac;
-//            break;
+//        
         case 'g':
             START=true;
             break;
         case 'm':
             START=false;
             break;
-//        case 'o':
-//            cosX-=frac*cos(rotX*rad);
-//            cosY+=frac*cos(rotY*rad);
-//            cosZ-=frac*cos(rotZ*rad);
-//            //cout<<"Front : "<<cosX<<" "<<cosY<<" "<<cosZ<<endl;
-//            break;
-//        case 'l':
-//            cosX+=frac*cos(rotX*rad);
-//            cosY-=frac*cos(rotY*rad);
-//            cosZ+=frac*cos(rotZ*rad);
-//            //cout<<"Back : "<<cosX<<" "<<cosY<<" "<<cosZ<<endl;
-//            break;
-
     }
-
     glutPostRedisplay();
 }
 
-static void idle(void)
-{
-    glutPostRedisplay();
-}
+static void idle(void){glutPostRedisplay();}
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -1212,34 +401,46 @@ const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
 const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat high_shininess[] = { 100.0f };
 
-/* Program entry point */
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     glutInit(&argc, argv);
     glutInitWindowPosition(0,0);
-	glutInitWindowSize(1366,720);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
+	glutInitWindowSize(1920,1070);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
+    glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
+    glutSetOption(GLUT_MULTISAMPLE, 8);
 
-    glutCreateWindow("GLUT Shapes");
+    glutCreateWindow("Open Filght FX");
 
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
     glutIdleFunc(idle);
 
-    //PlaySound("starwars.wav", NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);
+    plane_model.load("models/plane.obj");
+    ground_model.load("models/ground.obj");
+    house_model.load("models/house.obj");
+    house2_model.load("models/house2.obj");
+    tree1_model.load("models/tree1.obj");
+    tree2_model.load("models/tree2.obj");
+    tree3_model.load("models/tree3.obj");
+    tree4_model.load("models/tree4.obj");
+    rock1_model.load("models/rock1.obj");
+    rock2_model.load("models/rock2.obj");
+    diamond_model.load("models/diamond.obj");
 
-    glClearColor(1,1,1,1);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
+    glClearColor(0.53f, 0.81f, 0.92f, 1.0f);
+    glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+    glDisable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glDisable(GL_CULL_FACE);
 
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
-    glEnable(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
 
     glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
