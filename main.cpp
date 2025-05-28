@@ -13,21 +13,14 @@ float zoom=4;
 float tX=0,tY=0,tZ=-8,rX=0,rY=0,rZ=4;
 float tZ1=-20,tZ2=-40,tZ3=-60,tZ4=-80,tZ5=-100,tZ6=-120;
 float rotX=0,rotY=0,rotZ=0;
-float cosX=0,cosY=1,cosZ=0;
-float angle=0;
-float cenX=0,cenY=0,cenZ=0,roll=0;
-float radius=0;
-float theta=0,slope=0;
 float speed = 0.3;
 float angleBackFrac = 0.2;
-float r[] = {0.1,0.4,0.0,0.9,0.2,0.5,0.0,0.7,0.5,0.0};
-float g[] = {0.2,0.0,0.4,0.5,0.2,0.0,0.3,0.9,0.0,0.2};
-float b[] = {0.4,0.5,0.0,0.7,0.9,0.0,0.1,0.2,0.5,0.0};
+
 int TIME=0;
 bool START = false;
 float diamondPosX[7] = {1,-2,3,-4,-2,0,2};
 float diamondPosY[7] = {2,3,10,6,7,4,1};
-bool diamondCollected[7] = {false, false, false, false, false, false, false};
+bool collected[7] = { false }; 
 
 bool rot = false;
 
@@ -101,29 +94,45 @@ void diamond(){
 
 int score = 0;
 void environment(int n){
-    if (!diamondCollected[n] && 
-        diamond_model.check_collision(0, 1, 0, 
-                                    tX + diamondPosX[n],
-                                    tY + diamondPosY[n], 
-                                    tZ, 
-                                    3.0f)) 
-    {
-        diamondCollected[n] = true;
-        score += 1;
-        cout << "Score: " << score << endl;
-    }
     glPushMatrix();
         glTranslated(28,0,0);
         glScaled(EN_SIZE*2,10,EN_SIZE*2);
         ground();
     glPopMatrix();
 
-    glPushMatrix();
-        glTranslated(diamondPosX[n],diamondPosY[n],0);
-        glScaled(3,3,3);
-        diamond();
-    glPopMatrix(); 
+    float dx = diamondPosX[n];
+    float dy = diamondPosY[n];
 
+    float dz;
+    switch (n) {
+        case 1: dz = tZ; break;
+        case 2: dz = tZ2; break;
+        case 3: dz = tZ3; break;
+        case 4: dz = tZ4; break;
+        case 5: dz = tZ5; break;
+        case 6: dz = tZ6; break;
+        default: dz = 0; break;
+    }
+
+    if (!collected[n]) {
+        bool hit = diamond_model.check_collision(
+            0, 1, 0,
+            tX + dx, tY + dy, dz,
+            3.0f
+        );
+
+        if (hit) {
+            collected[n] = true;
+            score++;
+        }
+
+        glPushMatrix();
+            glTranslated(dx, dy, dz);
+            glScaled(3, 3, 3);
+            diamond();
+        glPopMatrix();
+    }
+    
     glPushMatrix();
         glTranslated(-2,0,-5);
         glScaled(2,2,2);
@@ -205,32 +214,32 @@ void draw(){
     if(tY<-15)tY= -15;
 
     glPushMatrix();
-        glTranslated(tX,tY,tZ);
-        environment(2);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(tX,tY,tZ2);
-        environment(3);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslated(tX,tY,tZ3);
+        glTranslated(tX, tY, tZ);
         environment(1);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslated(tX,tY,tZ4);
-        environment(5);
+        glTranslated(tX, tY, tZ2);
+        environment(2);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslated(tX,tY,tZ5);
+        glTranslated(tX, tY, tZ3);
+        environment(3);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslated(tX, tY, tZ4);
         environment(4);
     glPopMatrix();
 
     glPushMatrix();
-        glTranslated(tX,tY,tZ6);
+        glTranslated(tX, tY, tZ5);
+        environment(5);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslated(tX, tY, tZ6);
         environment(6);
     glPopMatrix();
 
@@ -242,13 +251,31 @@ void draw(){
     tZ5+=speed;
     tZ6+=speed;
 
-    if(tZ>=20)tZ=-110;
-    if(tZ1>=20)tZ1=-110;
-    if(tZ2>=20)tZ2=-110;
-    if(tZ3>=20)tZ3=-110;
-    if(tZ4>=20)tZ4=-110;
-    if(tZ5>=20)tZ5=-110;
-    if(tZ6>=20)tZ6=-110;
+    if (tZ >= 20) {
+        tZ = -110;
+        collected[1] = false;
+    }
+    if (tZ2 >= 20) {
+        tZ2 = -110;
+        collected[2] = false;
+    }
+    if (tZ3 >= 20) {
+        tZ3 = -110;
+        collected[3] = false;
+    }
+    if (tZ4 >= 20) {
+        tZ4 = -110;
+        collected[4] = false;
+    }
+    if (tZ5 >= 20) {
+        tZ5 = -110;
+        collected[5] = false;
+    }
+    if (tZ6 >= 20) {
+        tZ6 = -110;
+        collected[6] = false;
+    }
+
 
     if(rotX>0)rotX-=angleBackFrac;
     if(rotX<0)rotX+=angleBackFrac;
