@@ -360,8 +360,18 @@ static void display(void)
             plane();
         glPopMatrix();
 
+        // Disable lighting and material for text rendering
+        glDisable(GL_LIGHTING);
+        glDisable(GL_COLOR_MATERIAL);
+
+        glColor3f(0.0f, 0.0f, 0.0f); // Set text color to black
         drawStrokeText("Press G to Start Game",-5,-2,0);
         drawStrokeText2("Open Flight FX",-5,-1,0);
+        glColor3f(1.0f, 1.0f, 1.0f); // Reset color to white (optional)
+
+        // Re-enable lighting and material after text rendering
+        // glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_LIGHTING);
     }
 
     glutSwapBuffers();
